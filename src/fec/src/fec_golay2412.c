@@ -37,7 +37,7 @@
 #define DEBUG_FEC_GOLAY2412 0
 
 // P matrix [12 x 12]
-unsigned int golay2412_P[12] = {
+const unsigned int golay2412_P[12] = {
     0x08ed, 0x01db, 0x03b5, 0x0769,
     0x0ed1, 0x0da3, 0x0b47, 0x068f,
     0x0d1d, 0x0a3b, 0x0477, 0x0ffe};
@@ -51,20 +51,20 @@ unsigned int golay2412_G[12] = {
 #endif
 
 // generator matrix transposed [24 x 12]
-unsigned int golay2412_Gt[24] = {
+const unsigned int golay2412_Gt[24] = {
     0x08ed, 0x01db, 0x03b5, 0x0769, 0x0ed1, 0x0da3, 0x0b47, 0x068f, 
     0x0d1d, 0x0a3b, 0x0477, 0x0ffe, 0x0800, 0x0400, 0x0200, 0x0100, 
     0x0080, 0x0040, 0x0020, 0x0010, 0x0008, 0x0004, 0x0002, 0x0001};
 
 // parity check matrix [12 x 24]
-unsigned int golay2412_H[12] = {
+const unsigned int golay2412_H[12] = {
     0x008008ed, 0x004001db, 0x002003b5, 0x00100769,
     0x00080ed1, 0x00040da3, 0x00020b47, 0x0001068f,
     0x00008d1d, 0x00004a3b, 0x00002477, 0x00001ffe};
 
 // multiply input vector with parity check matrix, H
 unsigned int golay2412_matrix_mul(unsigned int   _v,
-                                  unsigned int * _A,
+                                  const unsigned int * _A,
                                   unsigned int   _n)
 {
     unsigned int x = 0;

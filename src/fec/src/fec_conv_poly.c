@@ -29,29 +29,29 @@
 #if LIBFEC_ENABLED
 #include <fec.h>
 
-int fec_conv27_poly[2]  = {V27POLYA,
-                           V27POLYB};
+const int fec_conv27_poly[2]  = {V27POLYA,
+                                 V27POLYB};
 
-int fec_conv29_poly[2]  = {V29POLYA,
-                           V29POLYB};
+const int fec_conv29_poly[2]  = {V29POLYA,
+                                 V29POLYB};
 
-int fec_conv39_poly[3]  = {V39POLYA,
-                           V39POLYB,
-                           V39POLYC};
+const int fec_conv39_poly[3]  = {V39POLYA,
+                                 V39POLYB,
+                                 V39POLYC};
 
-int fec_conv615_poly[6] = {V615POLYA,
-                           V615POLYB,
-                           V615POLYC,
-                           V615POLYD,
-                           V615POLYE,
-                           V615POLYF};
+const int fec_conv615_poly[6] = {V615POLYA,
+                                 V615POLYB,
+                                 V615POLYC,
+                                 V615POLYD,
+                                 V615POLYE,
+                                V615POLYF};
 
 #else
 
-int fec_conv27_poly[2]  = {0,0};
-int fec_conv29_poly[2]  = {0,0};
-int fec_conv39_poly[3]  = {0,0,0};
-int fec_conv615_poly[6] = {0,0,0,0,0,0};
+const int fec_conv27_poly[2]  = {0,0};
+const int fec_conv29_poly[2]  = {0,0};
+const int fec_conv39_poly[3]  = {0,0,0};
+const int fec_conv615_poly[6] = {0,0,0,0,0,0};
 
 #endif
 

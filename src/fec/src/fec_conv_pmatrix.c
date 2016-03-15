@@ -23,37 +23,37 @@
 #include "liquid.internal.h"
 
 // 2/3-rate K=7 punctured convolutional code
-int fec_conv27p23_matrix[4] = {
+const int fec_conv27p23_matrix[4] = {
     1, 1,
     1, 0
 };
 
 // 3/4-rate K=7 punctured convolutional code
-int fec_conv27p34_matrix[6] = {
+const int fec_conv27p34_matrix[6] = {
     1, 1, 0,
     1, 0, 1
 };
 
 // 4/5-rate K=7 punctured convolutional code
-int fec_conv27p45_matrix[8] = {
+const int fec_conv27p45_matrix[8] = {
     1, 1, 1, 1,
     1, 0, 0, 0
 };
 
 // 5/6-rate K=7 punctured convolutional code
-int fec_conv27p56_matrix[10] = {
+const int fec_conv27p56_matrix[10] = {
     1, 1, 0, 1, 0,
     1, 0, 1, 0, 1
 };
 
 // 6/7-rate K=7 punctured convolutional code
-int fec_conv27p67_matrix[12] = {
+const int fec_conv27p67_matrix[12] = {
     1, 1, 1, 0, 1, 0,
     1, 0, 0, 1, 0, 1
 };
 
 // 7/8-rate K=7 punctured convolutional code
-int fec_conv27p78_matrix[14] = {
+const int fec_conv27p78_matrix[14] = {
     1, 1, 1, 1, 0, 1, 0,
     1, 0, 0, 0, 1, 0, 1
 };
@@ -62,37 +62,37 @@ int fec_conv27p78_matrix[14] = {
 
 
 // 2/3-rate K=9 punctured convolutional code
-int fec_conv29p23_matrix[4] = {
+const int fec_conv29p23_matrix[4] = {
     1, 1,
     1, 0
 };
 
 // 3/4-rate K=9 punctured convolutional code
-int fec_conv29p34_matrix[6] = {
+const int fec_conv29p34_matrix[6] = {
     1, 1, 1,
     1, 0, 0
 };
 
 // 4/5-rate K=9 punctured convolutional code
-int fec_conv29p45_matrix[8] = {
+const int fec_conv29p45_matrix[8] = {
     1, 1, 0, 1,
     1, 0, 1, 0
 };
 
 // 5/6-rate K=9 punctured convolutional code
-int fec_conv29p56_matrix[10] = {
+const int fec_conv29p56_matrix[10] = {
     1, 0, 1, 1, 0,
     1, 1, 0, 0, 1
 };
 
 // 6/7-rate K=9 punctured convolutional code
-int fec_conv29p67_matrix[12] = {
+const int fec_conv29p67_matrix[12] = {
     1, 1, 0, 1, 1, 0,
     1, 0, 1, 0, 0, 1
 };
 
 // 7/8-rate K=9 punctured convolutional code
-int fec_conv29p78_matrix[14] = {
+const int fec_conv29p78_matrix[14] = {
     1, 1, 0, 1, 0, 1, 1,
     1, 0, 1, 0, 1, 0, 0
 };

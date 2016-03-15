@@ -38,7 +38,7 @@ int main() {
         c_ones_mod2[b] = count_ones((unsigned char)b) % 2;
     
     // print results
-    printf("unsigned char c_ones_mod2[] = {\n    ");
+    printf("const unsigned char c_ones_mod2[] = {\n    ");
     for (b=0; b<256; b++) {
         printf("%1u", c_ones_mod2[b]);
         if (b==255)

@@ -107,11 +107,11 @@ struct fec_s {
     // convolutional : internal memory structure
     unsigned char * enc_bits;
     void * vp;      // decoder object
-    int * poly;     // polynomial
+    const int * poly;     // polynomial
     unsigned int R; // primitive rate, inverted (e.g. R=3 for 1/3)
     unsigned int K; // constraint length
     unsigned int P; // puncturing rate (e.g. p=3 for 3/4)
-    int * puncturing_matrix;
+    const int * puncturing_matrix;
 
     // viterbi decoder function pointers
     void*(*create_viterbi)(int);
@@ -218,8 +218,8 @@ void fec_rep5_decode_soft(fec _q,
                           unsigned char * _msg_dec);
 
 // Hamming(7,4)
-extern unsigned char hamming74_enc_gentab[16];
-extern unsigned char hamming74_dec_gentab[128];
+extern const unsigned char hamming74_enc_gentab[16];
+extern const unsigned char hamming74_dec_gentab[128];
 fec fec_hamming74_create(void *_opts);
 void fec_hamming74_destroy(fec _q);
 void fec_hamming74_print(fec _q);
@@ -239,8 +239,8 @@ void fec_hamming74_decode_soft(fec _q,
 unsigned char fecsoft_hamming74_decode(unsigned char * _soft_bits);
 
 // Hamming(8,4)
-extern unsigned char hamming84_enc_gentab[16];
-extern unsigned char hamming84_dec_gentab[256];
+extern const unsigned char hamming84_enc_gentab[16];
+extern const unsigned char hamming84_dec_gentab[256];
 fec fec_hamming84_create(void *_opts);
 void fec_hamming84_destroy(fec _q);
 void fec_hamming84_print(fec _q);
@@ -263,7 +263,7 @@ unsigned char fecsoft_hamming84_decode(unsigned char * _soft_bits);
 
 unsigned int fec_hamming128_encode_symbol(unsigned int _sym_dec);
 unsigned int fec_hamming128_decode_symbol(unsigned int _sym_enc);
-extern unsigned short int hamming128_enc_gentab[256];   // encoding table
+extern const unsigned short int hamming128_enc_gentab[256];   // encoding table
 
 fec fec_hamming128_create(void *_opts);
 void fec_hamming128_destroy(fec _q);
@@ -282,7 +282,7 @@ void fec_hamming128_decode_soft(fec _q,
                                 unsigned char * _msg_dec);
 // soft decoding of one symbol
 unsigned int fecsoft_hamming128_decode(unsigned char * _soft_bits);
-extern unsigned char fecsoft_hamming128_n3[256][17];
+extern const unsigned char fecsoft_hamming128_n3[256][17];
 unsigned int fecsoft_hamming128_decode_n3(unsigned char * _soft_bits);
 
 
@@ -299,13 +299,13 @@ unsigned int fec_hamming3126_decode_symbol(unsigned int _sym_enc);
 
 unsigned int fec_golay2412_encode_symbol(unsigned int _sym_dec);
 unsigned int fec_golay2412_decode_symbol(unsigned int _sym_enc);
-extern unsigned int golay2412_P[12];
-extern unsigned int golay2412_Gt[24];
-extern unsigned int golay2412_H[12];
+extern const unsigned int golay2412_P[12];
+extern const unsigned int golay2412_Gt[24];
+extern const unsigned int golay2412_H[12];
 
 // multiply input vector with matrix
 unsigned int golay2412_matrix_mul(unsigned int   _v,
-                                  unsigned int * _A,
+                                  const unsigned int * _A,
                                   unsigned int   _n);
 
 // search for p[i] such that w(v+p[i]) <= 2, return -1 on fail
@@ -350,10 +350,10 @@ int  fec_secded2216_estimate_ehat(unsigned char * _sym_enc,
                                   unsigned char * _e_hat);
 
 // parity matrix [6 x 16 bits], [6 x 2 bytes]
-extern unsigned char secded2216_P[12];
+extern const unsigned char secded2216_P[12];
 
 // syndrome vectors of errors with weight exactly equal to 1
-extern unsigned char secded2216_syndrome_w1[22];
+extern const unsigned char secded2216_syndrome_w1[22];
 
 fec fec_secded2216_create(void *_opts);
 void fec_secded2216_destroy(fec _q);
@@ -394,10 +394,10 @@ int fec_secded3932_decode_symbol(unsigned char * _sym_enc,
                                  unsigned char * _sym_dec);
 
 // parity matrix [7 x 32 bits], [7 x 4 bytes]
-extern unsigned char secded3932_P[28];
+extern const unsigned char secded3932_P[28];
 
 // syndrome vectors of errors with weight exactly equal to 1
-extern unsigned char secded3932_syndrome_w1[39];
+extern const unsigned char secded3932_syndrome_w1[39];
 
 fec fec_secded3932_create(void *_opts);
 void fec_secded3932_destroy(fec _q);
@@ -437,8 +437,8 @@ int fec_secded7264_estimate_ehat(unsigned char * _sym_enc,
 int fec_secded7264_decode_symbol(unsigned char * _sym_enc,
                                  unsigned char * _sym_dec);
 
-extern unsigned char secded7264_P[64];
-extern unsigned char secded7264_syndrome_w1[72];
+extern const unsigned char secded7264_P[64];
+extern const unsigned char secded7264_syndrome_w1[72];
 
 fec fec_secded7264_create(void *_opts);
 void fec_secded7264_destroy(fec _q);
@@ -475,25 +475,25 @@ unsigned int fec_conv_get_enc_msg_len(unsigned int _dec_msg_len,
                                       unsigned int _p);
 
 // convolutional code polynomials
-extern int fec_conv27_poly[2];
-extern int fec_conv29_poly[2];
-extern int fec_conv39_poly[3];
-extern int fec_conv615_poly[6];
+extern const int fec_conv27_poly[2];
+extern const int fec_conv29_poly[2];
+extern const int fec_conv39_poly[3];
+extern const int fec_conv615_poly[6];
 
 // convolutional code puncturing matrices  [R x P]
-extern int fec_conv27p23_matrix[4];     // [2 x 2]
-extern int fec_conv27p34_matrix[6];     // [2 x 3]
-extern int fec_conv27p45_matrix[8];     // [2 x 4]
-extern int fec_conv27p56_matrix[10];    // [2 x 5]
-extern int fec_conv27p67_matrix[12];    // [2 x 6]
-extern int fec_conv27p78_matrix[14];    // [2 x 7]
+extern const int fec_conv27p23_matrix[4];     // [2 x 2]
+extern const int fec_conv27p34_matrix[6];     // [2 x 3]
+extern const int fec_conv27p45_matrix[8];     // [2 x 4]
+extern const int fec_conv27p56_matrix[10];    // [2 x 5]
+extern const int fec_conv27p67_matrix[12];    // [2 x 6]
+extern const int fec_conv27p78_matrix[14];    // [2 x 7]
 
-extern int fec_conv29p23_matrix[4];     // [2 x 2]
-extern int fec_conv29p34_matrix[6];     // [2 x 3]
-extern int fec_conv29p45_matrix[8];     // [2 x 4]
-extern int fec_conv29p56_matrix[10];    // [2 x 5]
-extern int fec_conv29p67_matrix[12];    // [2 x 6]
-extern int fec_conv29p78_matrix[14];    // [2 x 7]
+extern const int fec_conv29p23_matrix[4];     // [2 x 2]
+extern const int fec_conv29p34_matrix[6];     // [2 x 3]
+extern const int fec_conv29p45_matrix[8];     // [2 x 4]
+extern const int fec_conv29p56_matrix[10];    // [2 x 5]
+extern const int fec_conv29p67_matrix[12];    // [2 x 6]
+extern const int fec_conv29p78_matrix[14];    // [2 x 7]
 
 fec fec_conv_create(fec_scheme _fs);
 void fec_conv_destroy(fec _q);
@@ -1757,7 +1757,7 @@ struct msequence_s {
 };
 
 // Default msequence generator objects
-extern struct msequence_s msequence_default[16];
+extern const struct msequence_s msequence_default[16];
 
 
 //
@@ -1832,7 +1832,7 @@ extern const unsigned char liquid_c_ones_mod2[256];
 #define liquid_bdotprod_uint32(x,y) liquid_count_ones_mod2_uint32((x)&(y))
 
 // number of leading zeros in byte
-extern unsigned int liquid_c_leading_zeros[256];
+extern const unsigned int liquid_c_leading_zeros[256];
 
 // byte reversal and manipulation
 extern const unsigned char liquid_reverse_byte_gentab[256];

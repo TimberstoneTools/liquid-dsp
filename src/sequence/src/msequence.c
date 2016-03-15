@@ -38,7 +38,7 @@
 //  Note that 'g' is stored as the default polynomial shifted to the
 //  right by one bit; this bit is implied and not actually used in
 //  the shift register's feedback bit computation.
-struct msequence_s msequence_default[16] = {
+const struct msequence_s msequence_default[16] = {
 //   m,     g,      a,      n,      v,      b
     {0,     0,      1,      0,      1,      0}, // dummy placeholder
     {0,     0,      1,      0,      1,      0}, // dummy placeholder

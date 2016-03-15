@@ -44,7 +44,7 @@
 //  1110 0001 1101 0001 :
 //  0001 0011 1100 0111 :
 //  0100 0100 0011 1111 :
-unsigned char secded2216_P[12] = {
+const unsigned char secded2216_P[12] = {
     0x99, 0x3c,
     0x3e, 0x8a,
     0xee, 0x60,
@@ -53,7 +53,7 @@ unsigned char secded2216_P[12] = {
     0x44, 0x3f};
 
 // syndrome vectors for errors of weight 1
-unsigned char secded2216_syndrome_w1[22] = {
+const unsigned char secded2216_syndrome_w1[22] = {
     0x07, 0x13, 0x23, 0x31, 
     0x25, 0x29, 0x0e, 0x16, 
     0x26, 0x1a, 0x19, 0x38, 
