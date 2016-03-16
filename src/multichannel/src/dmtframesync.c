@@ -195,7 +195,7 @@ dmtframesync dmtframesync_create(unsigned int           _M,
     q->S1 = (float complex*) malloc((q->M)*sizeof(float complex));
     q->s1 = (float complex*) malloc((q->M)*sizeof(float complex));
     dmtframe_init_S1(q->p, q->M, q->S1, q->s1, &q->M_S1);
-#if !DEBUG_DMTFRAMESYNC
+#if DEBUG_DMTFRAMESYNC == 0
     free(q->s1);
     q->s1 = NULL;
 #endif
