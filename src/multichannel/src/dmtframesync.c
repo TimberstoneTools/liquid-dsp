@@ -192,12 +192,16 @@ dmtframesync dmtframesync_create(unsigned int           _M,
     q->input_buffer = windowcf_create(q->M + q->cp_len);
 
     // allocate memory for PLCP arrays
-    q->S0 = (float complex*) malloc((q->M)*sizeof(float complex));
-    q->s0 = (float complex*) malloc((q->M)*sizeof(float complex));
     q->S1 = (float complex*) malloc((q->M)*sizeof(float complex));
     q->s1 = (float complex*) malloc((q->M)*sizeof(float complex));
-    dmtframe_init_S0(q->p, q->M, q->S0, q->s0, &q->M_S0);
     dmtframe_init_S1(q->p, q->M, q->S1, q->s1, &q->M_S1);
+#if !DEBUG_DMTFRAMESYNC
+    free(q->s1);
+    q->s1 = NULL;
+#endif
+    q->S0 = (float complex*) malloc((q->M)*sizeof(float complex));
+    q->s0 = (float complex*) malloc((q->M)*sizeof(float complex));
+    dmtframe_init_S0(q->p, q->M, q->S0, q->s0, &q->M_S0);
 
     // compute scaling factor
     q->g_data = sqrtf(q->M) / sqrtf(q->M_pilot + q->M_data);
@@ -213,10 +217,10 @@ dmtframesync dmtframesync_create(unsigned int           _M,
     q->R  = (float complex*) malloc((q->M)*sizeof(float complex));
 
 #if 1
-    memset(q->G0, 0x00, q->M*sizeof(float complex));
-    memset(q->G1, 0x00, q->M*sizeof(float complex));
-    memset(q->G , 0x00, q->M*sizeof(float complex));
-    memset(q->B,  0x00, q->M*sizeof(float complex));
+    memset(q->G0, 0, q->M*sizeof(float complex));
+    memset(q->G1, 0, q->M*sizeof(float complex));
+    memset(q->G , 0, q->M*sizeof(float complex));
+    memset(q->B,  0, q->M*sizeof(float complex));
 #endif
 
     // timing backoff
@@ -296,7 +300,9 @@ void dmtframesync_destroy(dmtframesync _q)
     free(_q->S0);
     free(_q->s0);
     free(_q->S1);
+#if DEBUG_DMTFRAMESYNC
     free(_q->s1);
+#endif
 
     // free gain arrays
     free(_q->G0);
