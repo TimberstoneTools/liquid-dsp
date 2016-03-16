@@ -1113,6 +1113,23 @@ void bpacketsync_reconfig(bpacketsync _q);
 
 
 // 
+// dmtflexframe
+//
+
+#define DMTFLEXFRAME_PROTOCOL  (104)
+
+// header description
+#define DMTFLEXFRAME_H_USER    (8)                         // user-defined array
+#define DMTFLEXFRAME_H_DEC     (DMTFLEXFRAME_H_USER+6)     // decoded length
+#define DMTFLEXFRAME_H_CRC     (LIQUID_CRC_32)             // header CRC
+#define DMTFLEXFRAME_H_FEC     (LIQUID_FEC_GOLAY2412)      // header FEC
+#define DMTFLEXFRAME_H_ENC     (36)                        // encoded length
+#define DMTFLEXFRAME_H_MOD     (LIQUID_MODEM_BPSK)         // modulation scheme
+#define DMTFLEXFRAME_H_BPS     (1)                         // modulation depth
+#define DMTFLEXFRAME_H_SYM     (288)                       // number of symbols
+
+
+//
 // flexframe
 //
 
@@ -1461,6 +1478,81 @@ extern const float complex modem_arb256opt[256];
 //
 // MODULE : multichannel
 //
+
+// dmt frame (common)
+
+// generate short sequence symbols
+//  _p      :   subcarrier allocation array
+//  _M      :   total number of subcarriers
+//  _S0     :   output symbol (freq)
+//  _s0     :   output symbol (time)
+//  _M_S0   :   total number of enabled subcarriers in S0
+void dmtframe_init_S0(unsigned char * _p,
+                       unsigned int    _M,
+                       float complex * _S0,
+                       float complex * _s0,
+                       unsigned int *  _M_S0);
+
+// generate long sequence symbols
+//  _p      :   subcarrier allocation array
+//  _M      :   total number of subcarriers
+//  _S1     :   output symbol (freq)
+//  _s1     :   output symbol (time)
+//  _M_S1   :   total number of enabled subcarriers in S1
+void dmtframe_init_S1(unsigned char * _p,
+                       unsigned int    _M,
+                       float complex * _S1,
+                       float complex * _s1,
+                       unsigned int *  _M_S1);
+
+// generate symbol (add cyclic prefix/postfix, overlap)
+void dmtframegen_gensymbol(dmtframegen    _q,
+                            float complex * _buffer);
+
+void dmtframesync_cpcorrelate(dmtframesync _q);
+void dmtframesync_findrxypeak(dmtframesync _q);
+void dmtframesync_rxpayload(dmtframesync _q);
+
+void dmtframesync_execute_seekplcp(dmtframesync _q);
+void dmtframesync_execute_S0a(dmtframesync _q);
+void dmtframesync_execute_S0b(dmtframesync _q);
+void dmtframesync_execute_S1( dmtframesync _q);
+void dmtframesync_execute_rxsymbols(dmtframesync _q);
+
+void dmtframesync_S0_metrics(dmtframesync _q,
+                              float complex * _G,
+                              float complex * _s_hat);
+
+// estimate short sequence gain
+//  _q      :   dmtframesync object
+//  _x      :   input array (time)
+//  _G      :   output gain (freq)
+void dmtframesync_estimate_gain_S0(dmtframesync   _q,
+                                    float complex * _x,
+                                    float complex * _G);
+
+// estimate long sequence gain
+//  _q      :   dmtframesync object
+//  _x      :   input array (time)
+//  _G      :   output gain (freq)
+void dmtframesync_estimate_gain_S1(dmtframesync _q,
+                                    float complex * _x,
+                                    float complex * _G);
+
+// estimate complex equalizer gain from G0 and G1
+//  _q      :   dmtframesync object
+//  _ntaps  :   number of time-domain taps for smoothing
+void dmtframesync_estimate_eqgain(dmtframesync _q,
+                                   unsigned int _ntaps);
+
+// estimate complex equalizer gain from G0 and G1 using polynomial fit
+//  _q      :   dmtframesync object
+//  _order  :   polynomial order
+void dmtframesync_estimate_eqgain_poly(dmtframesync _q,
+                                        unsigned int _order);
+
+// recover symbol, correcting for gain, pilot phase, etc.
+void dmtframesync_rxsymbol(dmtframesync _q);
 
 // ofdm frame (common)
 

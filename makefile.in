@@ -611,6 +611,8 @@ framing_objects :=						\
 	src/framing/src/bsync_crcf.o				\
 	src/framing/src/bsync_cccf.o				\
 	src/framing/src/detector_cccf.o				\
+	src/framing/src/dmtflexframegen.o			\
+	src/framing/src/dmtflexframesync.o			\
 	src/framing/src/framedatastats.o			\
 	src/framing/src/framesyncstats.o			\
 	src/framing/src/framegen64.o				\
@@ -646,6 +648,10 @@ src/framing/src/bsync_crcf.o : %.o : %.c $(include_headers) src/framing/src/bsyn
 src/framing/src/bsync_cccf.o : %.o : %.c $(include_headers) src/framing/src/bsync.c
 
 src/framing/src/detector_cccf.o : %.o : %.c $(include_headers)
+
+src/framing/src/dmtflexframegen.o : %.o : %.c $(include_headers)
+
+src/framing/src/dmtflexframesync.o : %.o : %.c $(include_headers)
 
 src/framing/src/framedatastats.o : %.o : %.c $(include_headers)
 
@@ -909,6 +915,9 @@ modem_benchmarks :=						\
 #
 
 multichannel_objects :=						\
+	src/multichannel/src/dmtframe.common.o			\
+	src/multichannel/src/dmtframegen.o			\
+	src/multichannel/src/dmtframesync.o			\
 	src/multichannel/src/firpfbch_crcf.o			\
 	src/multichannel/src/firpfbch_cccf.o			\
 	src/multichannel/src/ofdmframe.common.o			\
@@ -1440,6 +1449,7 @@ example_programs :=						\
 	examples/cpfsk_psd_example				\
 	examples/cvsd_example					\
 	examples/detector_cccf_example				\
+	examples/dmtflexframesync_example			\
 	examples/dotprod_rrrf_example				\
 	examples/dotprod_cccf_example				\
 	examples/eqlms_cccf_block_example			\

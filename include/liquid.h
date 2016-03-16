@@ -3792,6 +3792,109 @@ void bpacketsync_execute_bit(bpacketsync _q,
                              unsigned char _bit);
 
 //
+// DMT flexframe generator
+//
+
+// ofdm frame generator properties
+typedef struct {
+    unsigned int check;         // data validity check
+    unsigned int fec0;          // forward error-correction scheme (inner)
+    unsigned int fec1;          // forward error-correction scheme (outer)
+    unsigned int mod_scheme;    // modulation scheme
+    //unsigned int block_size;  // framing block size
+} dmtflexframegenprops_s;
+void dmtflexframegenprops_init_default(dmtflexframegenprops_s * _props);
+
+typedef struct dmtflexframegen_s * dmtflexframegen;
+
+// create DMT flexible framing generator object
+//  _M          :   number of subcarriers, >10 typical
+//  _cp_len     :   cyclic prefix length
+//  _taper_len  :   taper length (DMT symbol overlap)
+//  _p          :   subcarrier allocation (null, pilot, data), [size: _M x 1]
+//  _fgprops    :   frame properties (modulation scheme, etc.)
+dmtflexframegen dmtflexframegen_create(unsigned int              _M,
+                                         unsigned int              _cp_len,
+                                         unsigned int              _taper_len,
+                                         unsigned char *           _p,
+                                         dmtflexframegenprops_s * _fgprops);
+
+// destroy dmtflexframegen object
+void dmtflexframegen_destroy(dmtflexframegen _q);
+
+// print parameters, properties, etc.
+void dmtflexframegen_print(dmtflexframegen _q);
+
+// reset dmtflexframegen object internals
+void dmtflexframegen_reset(dmtflexframegen _q);
+
+// is frame assembled?
+int dmtflexframegen_is_assembled(dmtflexframegen _q);
+
+// get properties
+void dmtflexframegen_getprops(dmtflexframegen _q,
+                               dmtflexframegenprops_s * _props);
+
+// set properties
+void dmtflexframegen_setprops(dmtflexframegen _q,
+                               dmtflexframegenprops_s * _props);
+
+// assemble a frame from an array of data
+//  _q              :   DMT frame generator object
+//  _header         :   frame header [8 bytes]
+//  _payload        :   payload data [size: _payload_len x 1]
+//  _payload_len    :   payload data length
+void dmtflexframegen_assemble(dmtflexframegen _q,
+                               const unsigned char * _header,
+                               const unsigned char * _payload,
+                               unsigned int    _payload_len);
+
+// write symbols of assembled frame
+//  _q              :   DMT frame generator object
+//  _buffer         :   output buffer [size: M+cp_len x 1]
+int dmtflexframegen_writesymbol(dmtflexframegen _q,
+                                 liquid_float_complex * _buffer);
+
+//
+// DMT flex frame synchronizer
+//
+
+typedef struct dmtflexframesync_s * dmtflexframesync;
+
+// create DMT flexible framing synchronizer object
+//  _M          :   number of subcarriers
+//  _cp_len     :   cyclic prefix length
+//  _taper_len  :   taper length (DMT symbol overlap)
+//  _p          :   subcarrier allocation (null, pilot, data), [size: _M x 1]
+//  _callback   :   user-defined callback function
+//  _userdata   :   user-defined data pointer
+dmtflexframesync dmtflexframesync_create(unsigned int       _M,
+                                           unsigned int       _cp_len,
+                                           unsigned int       _taper_len,
+                                           unsigned char *    _p,
+                                           framesync_callback _callback,
+                                           void *             _userdata);
+
+void dmtflexframesync_destroy(dmtflexframesync _q);
+void dmtflexframesync_print(dmtflexframesync _q);
+void dmtflexframesync_reset(dmtflexframesync _q);
+void dmtflexframesync_execute(dmtflexframesync _q,
+                               liquid_float_complex * _x,
+                               unsigned int _n);
+
+// query the received signal strength indication
+float dmtflexframesync_get_rssi(dmtflexframesync _q);
+
+// query the received carrier offset estimate
+float dmtflexframesync_get_cfo(dmtflexframesync _q);
+
+// enable/disable debugging
+void dmtflexframesync_debug_enable(dmtflexframesync _q);
+void dmtflexframesync_debug_disable(dmtflexframesync _q);
+void dmtflexframesync_debug_print(dmtflexframesync _q,
+                                   const char *      _filename);
+
+//
 // GMSK frame generator
 //
 
@@ -5650,6 +5753,115 @@ void ampmodem_demodulate_block(ampmodem _q,
 #define LIQUID_ANALYZER         0
 #define LIQUID_SYNTHESIZER      1
 
+#define DMTFRAME_SCTYPE_NULL   0
+#define DMTFRAME_SCTYPE_PILOT  1
+#define DMTFRAME_SCTYPE_DATA   2
+
+// initialize default subcarrier allocation
+//  _M      :   number of subcarriers
+//  _p      :   output subcarrier allocation array, [size: _M x 1]
+void dmtframe_init_default_sctype(unsigned int _M,
+                                   unsigned char * _p);
+
+// validate subcarrier type (count number of null, pilot, and data
+// subcarriers in the allocation)
+//  _p          :   subcarrier allocation array, [size: _M x 1]
+//  _M          :   number of subcarriers
+//  _M_null     :   output number of null subcarriers
+//  _M_pilot    :   output number of pilot subcarriers
+//  _M_data     :   output number of data subcarriers
+void dmtframe_validate_sctype(unsigned char * _p,
+                               unsigned int _M,
+                               unsigned int * _M_null,
+                               unsigned int * _M_pilot,
+                               unsigned int * _M_data);
+
+// print subcarrier allocation to screen
+//  _p      :   output subcarrier allocation array, [size: _M x 1]
+//  _M      :   number of subcarriers
+void dmtframe_print_sctype(unsigned char * _p,
+                            unsigned int    _M);
+
+
+//
+// DMT frame (symbol) generator
+//
+typedef struct dmtframegen_s * dmtframegen;
+
+// create DMT framing generator object
+//  _M          :   number of subcarriers, >10 typical
+//  _cp_len     :   cyclic prefix length
+//  _taper_len  :   taper length (DMT symbol overlap)
+//  _p          :   subcarrier allocation (null, pilot, data), [size: _M x 1]
+dmtframegen dmtframegen_create(unsigned int    _M,
+                                 unsigned int    _cp_len,
+                                 unsigned int    _taper_len,
+                                 unsigned char * _p);
+
+void dmtframegen_destroy(dmtframegen _q);
+
+void dmtframegen_print(dmtframegen _q);
+
+void dmtframegen_reset(dmtframegen _q);
+
+// write first S0 symbol
+void dmtframegen_write_S0a(dmtframegen _q,
+                            liquid_float_complex *_y);
+
+// write second S0 symbol
+void dmtframegen_write_S0b(dmtframegen _q,
+                            liquid_float_complex *_y);
+
+// write S1 symbol
+void dmtframegen_write_S1(dmtframegen _q,
+                           liquid_float_complex *_y);
+
+// write data symbol
+void dmtframegen_writesymbol(dmtframegen _q,
+                              liquid_float_complex * _x,
+                              liquid_float_complex *_y);
+
+// write tail
+void dmtframegen_writetail(dmtframegen _q,
+                            liquid_float_complex * _x);
+
+//
+// DMT frame (symbol) synchronizer
+//
+typedef int (*dmtframesync_callback)(liquid_float_complex * _y,
+                                      unsigned char * _p,
+                                      unsigned int _M,
+                                      void * _userdata);
+typedef struct dmtframesync_s * dmtframesync;
+
+// create DMT framing synchronizer object
+//  _M          :   number of subcarriers, >10 typical
+//  _cp_len     :   cyclic prefix length
+//  _taper_len  :   taper length (DMT symbol overlap)
+//  _p          :   subcarrier allocation (null, pilot, data), [size: _M x 1]
+//  _callback   :   user-defined callback function
+//  _userdata   :   user-defined data pointer
+dmtframesync dmtframesync_create(unsigned int           _M,
+                                   unsigned int           _cp_len,
+                                   unsigned int           _taper_len,
+                                   unsigned char *        _p,
+                                   dmtframesync_callback _callback,
+                                   void *                 _userdata);
+void dmtframesync_destroy(dmtframesync _q);
+void dmtframesync_print(dmtframesync _q);
+void dmtframesync_reset(dmtframesync _q);
+void dmtframesync_execute(dmtframesync _q,
+                           liquid_float_complex * _x,
+                           unsigned int _n);
+
+// query methods
+float dmtframesync_get_rssi(dmtframesync _q); // received signal strength indication
+float dmtframesync_get_cfo(dmtframesync _q);  // carrier offset estimate
+
+// debugging
+void dmtframesync_debug_enable(dmtframesync _q);
+void dmtframesync_debug_disable(dmtframesync _q);
+void dmtframesync_debug_print(dmtframesync _q, const char * _filename);
 
 //
 // Finite impulse response polyphase filterbank channelizer
