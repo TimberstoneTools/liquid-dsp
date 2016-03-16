@@ -113,7 +113,7 @@ struct dmtflexframesync_s {
     float evm_hat;                      // average error vector magnitude
 
     // internal synchronizer objects
-    ofdmframesync fs;                   // internal DMT frame synchronizer
+    dmtframesync fs;                   // internal DMT frame synchronizer
 
     // counters/states
     unsigned int symbol_counter;        // received symbol number
@@ -164,17 +164,17 @@ dmtflexframesync dmtflexframesync_create(unsigned int       _M,
     q->p = (unsigned char*) malloc((q->M)*sizeof(unsigned char));
     if (_p == NULL) {
         // initialize default subcarrier allocation
-        ofdmframe_init_default_sctype(q->M, q->p);
+        dmtframe_init_default_sctype(q->M, q->p);
     } else {
         // copy user-defined subcarrier allocation
         memmove(q->p, _p, q->M*sizeof(unsigned char));
     }
 
     // validate and count subcarrier allocation
-    ofdmframe_validate_sctype(q->p, q->M, &q->M_null, &q->M_pilot, &q->M_data);
+    dmtframe_validate_sctype(q->p, q->M, &q->M_null, &q->M_pilot, &q->M_data);
 
     // create internal framing object
-    q->fs = ofdmframesync_create(_M, _cp_len, _taper_len, _p, dmtflexframesync_internal_callback, (void*)q);
+    q->fs = dmtframesync_create(_M, _cp_len, _taper_len, _p, dmtflexframesync_internal_callback, (void*)q);
 
     // create header objects
     q->mod_header = modem_create(DMTFLEXFRAME_H_MOD);
@@ -214,7 +214,7 @@ dmtflexframesync dmtflexframesync_create(unsigned int       _M,
 void dmtflexframesync_destroy(dmtflexframesync _q)
 {
     // destroy internal objects
-    ofdmframesync_destroy(_q->fs);
+    dmtframesync_destroy(_q->fs);
     packetizer_destroy(_q->p_header);
     modem_destroy(_q->mod_header);
     packetizer_destroy(_q->p_payload);
@@ -261,7 +261,7 @@ void dmtflexframesync_reset(dmtflexframesync _q)
     framesyncstats_init_default(&_q->framestats);
 
     // reset internal DMT frame synchronizer object
-    ofdmframesync_reset(_q->fs);
+    dmtframesync_reset(_q->fs);
 }
 
 // execute synchronizer object on buffer of samples
@@ -269,8 +269,8 @@ void dmtflexframesync_execute(dmtflexframesync _q,
                                float complex * _x,
                                unsigned int _n)
 {
-    // push samples through ofdmframesync object
-    ofdmframesync_execute(_q->fs, _x, _n);
+    // push samples through dmtframesync object
+    dmtframesync_execute(_q->fs, _x, _n);
 }
 
 // 
@@ -280,13 +280,13 @@ void dmtflexframesync_execute(dmtflexframesync _q,
 // received signal strength indication
 float dmtflexframesync_get_rssi(dmtflexframesync _q)
 {
-    return ofdmframesync_get_rssi(_q->fs);
+    return dmtframesync_get_rssi(_q->fs);
 }
 
 // received carrier frequency offset
 float dmtflexframesync_get_cfo(dmtflexframesync _q)
 {
-    return ofdmframesync_get_cfo(_q->fs);
+    return dmtframesync_get_cfo(_q->fs);
 }
 
 // 
@@ -296,20 +296,20 @@ float dmtflexframesync_get_cfo(dmtflexframesync _q)
 // enable debugging for internal ofdm frame synchronizer
 void dmtflexframesync_debug_enable(dmtflexframesync _q)
 {
-    ofdmframesync_debug_enable(_q->fs);
+    dmtframesync_debug_enable(_q->fs);
 }
 
 // disable debugging for internal ofdm frame synchronizer
 void dmtflexframesync_debug_disable(dmtflexframesync _q)
 {
-    ofdmframesync_debug_disable(_q->fs);
+    dmtframesync_debug_disable(_q->fs);
 }
 
 // print debugging file for internal ofdm frame synchronizer
 void dmtflexframesync_debug_print(dmtflexframesync _q,
                                    const char *      _filename)
 {
-    ofdmframesync_debug_print(_q->fs, _filename);
+    dmtframesync_debug_print(_q->fs, _filename);
 }
 
 //
@@ -402,8 +402,8 @@ void dmtflexframesync_rxheader(dmtflexframesync _q,
                 else {
                     //printf("**** header invalid!\n");
                     // set framestats internals
-                    _q->framestats.rssi             = ofdmframesync_get_rssi(_q->fs);
-                    _q->framestats.cfo              = ofdmframesync_get_cfo(_q->fs);
+                    _q->framestats.rssi             = dmtframesync_get_rssi(_q->fs);
+                    _q->framestats.cfo              = dmtframesync_get_cfo(_q->fs);
                     _q->framestats.framesyms        = NULL;
                     _q->framestats.num_framesyms    = 0;
                     _q->framestats.mod_scheme       = LIQUID_MODEM_UNKNOWN;
@@ -633,8 +633,8 @@ void dmtflexframesync_rxpayload(dmtflexframesync _q,
                 }
 
                 // set framestats internals
-                _q->framestats.rssi             = ofdmframesync_get_rssi(_q->fs);
-                _q->framestats.cfo              = ofdmframesync_get_cfo(_q->fs);
+                _q->framestats.rssi             = dmtframesync_get_rssi(_q->fs);
+                _q->framestats.cfo              = dmtframesync_get_cfo(_q->fs);
 #if DEBUG_DMTFLEXFRAMESYNC
                 _q->framestats.framesyms        = _q->payload_syms;
                 _q->framestats.num_framesyms    = _q->payload_mod_len;
